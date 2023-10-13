@@ -14,7 +14,7 @@ namespace ConsoleBros
             canva = new char[width, height];
         }
 
-        public void StartCanva()
+        public void StartCanva() // desnulifica o canva
         {
             for (int i = 0; i < canva.GetLength(0); i++)
             {
@@ -25,7 +25,7 @@ namespace ConsoleBros
             }
         }
 
-        public string CreateCanvaDraw()
+        public string CreateCanvaDraw() // concatena todo o canva
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < canva.GetLength(0); i++)
@@ -33,7 +33,7 @@ namespace ConsoleBros
                 for (int j = 0; j < canva.GetLength(1); j++)
                 {
                     for (int k = 0; k < NesPalette.ColorTag.Length; k++) {
-                        if (k == 0) sb.Append(' ');
+                        if (k == 0) sb.Append(' ');                             //transparencia, preciso mudar para receber a 'cor' de menor prioridade de layer
                         else if (canva[i, j] == NesPalette.ColorTag[k])
                         {
                             sb.Append(NesPalette.ASCIIColors[k]);
@@ -44,5 +44,8 @@ namespace ConsoleBros
             }
             return sb.ToString();
         }
+
+
+
     }
 }

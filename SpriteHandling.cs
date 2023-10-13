@@ -7,7 +7,7 @@ namespace ConsoleBros
     internal static class SpriteHandling
     {
 
-        public static char[,] ConvertSprite(string png_path)
+        public static char[,] ConvertSpriteToChar(string png_path) // lê o png contendo o sprite e faz o mapeamento de pixels, e depois converte ele para a ColorTag (o png precisa ser com a paleta de cores do NES)
         {
             char[,] sprite;
 
@@ -41,20 +41,28 @@ namespace ConsoleBros
                     }
                 }
 
-                /*
-                for (int i = 0; i < sprite_sheet_h; i++)
-                {
-                    for (int j = 0; j < sprite_sheet_w; j++)
-                    {
-                        if (bitmap.GetPixel(j, i).A == 0) sprite[i, j] = "[000]";
-                        else sprite[i, j] = "["+bitmap.GetPixel(j, i).R.ToString()+"]";
-                    }
-                }*/
-
                 return sprite;
 
             }
             
+        }
+
+        
+
+        public static void ConvertSprite(string path, string name) // converte o sprite para um arquivo txt
+        {
+            char[,] sprite = ConvertSpriteToChar(path);
+            using (StreamWriter writer = new StreamWriter(name))
+            {
+                for (int i = 0; i < sprite.GetLength(0); i++)
+                {
+                    for (int j = 0; j < sprite.GetLength(1); j++)
+                    {
+                        writer.Write(sprite[i, j]);
+                    }
+                    writer.WriteLine();
+                }
+            }
         }
 
         public static char[,] ReadSprite(string path)

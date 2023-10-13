@@ -1,6 +1,6 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
+// basicamente essa classe me ajuda a definir o tamanho da fonte dentro do código (não faço ideia de como funciona)
 public class ConsoleFont
 {
     private const int STD_OUTPUT_HANDLE = -11;
