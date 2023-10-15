@@ -3,9 +3,9 @@
     internal class Program
     {
         public const int SCREEN_WIDTH = 156 * 2;
-        public const int SCREEN_HEIGHT = 140;
+        public const int SCREEN_HEIGHT = 180;
 
-        static Engine engine = new Engine(24, SCREEN_HEIGHT, SCREEN_WIDTH);
+        static Engine engine = new Engine(40, SCREEN_HEIGHT, SCREEN_WIDTH);
         static void Main(string[] args)
         {
             Start();
@@ -16,13 +16,14 @@
 
         internal static void Start()
         {
-            SpriteHandling.ConvertSprite("../../../Sprites/tiles.png", "tiles.txt");
             Player.SliceFrames();
+            Console.SetWindowSize(SCREEN_WIDTH * 2, SCREEN_HEIGHT);
+            Console.BufferWidth = Console.WindowWidth;
+            Console.BufferHeight = Console.WindowHeight;
             Console.CursorVisible = false;
-            Console.BufferWidth = SCREEN_WIDTH;
-            Console.BufferHeight = SCREEN_HEIGHT;
-            ConsoleFont.SetSize(3);
-            Console.SetWindowSize(SCREEN_WIDTH + 100, SCREEN_HEIGHT + 100);
+            ConsoleFont.SetSize(4);
+            Console.SetWindowSize((Program.SCREEN_WIDTH * 2) + 1, Program.SCREEN_HEIGHT);
+
             Thread.Sleep(1000);
         }
     }

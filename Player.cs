@@ -7,6 +7,8 @@
         public int y = 0;
 
         public static List<char[,]> sprite_index = new List<char[,]>();
+        private int mario_animation_frame = 0;
+
 
         public static void SliceFrames() // divide o spritesheet do mario em varios sprites
         {
@@ -44,31 +46,37 @@
             }
         }
 
-        public char[,] InvokePlayerSprite(int sprite_num) // pega um sprite do array de sprites do mario
-        {
-            return sprite_index[sprite_num];
-        }
 
-        public void Draw(char[,] sprite, char[,] canva) // joga um sprite pro canva
+        public char[,] Draw(char[,] sprite) // joga um sprite pro canva
         {
+            char[,] full_canva = new char[Program.SCREEN_HEIGHT, Program.SCREEN_WIDTH];
+            CanvaManager.StartCanva(full_canva);
+            if (x + sprite.GetLength(1) > full_canva.GetLength(1)) x = full_canva.GetLength(1) - sprite.GetLength(1); // evita sair das bordas
+            if (y + sprite.GetLength(0) > full_canva.GetLength(0)) y = full_canva.GetLength(0) - sprite.GetLength(0); // evita sair das bordas
+
             for (int i = 0; i < sprite.GetLength(0); i++)
             {
                 for (int j = 0; j < sprite.GetLength(1); j++)
                 {
-                    if (x + sprite.GetLength(1) > canva.GetLength(1)) x = canva.GetLength(1) - sprite.GetLength(1); // evita sair das bordas
-                    if (y + sprite.GetLength(0) > canva.GetLength(0)) y = canva.GetLength(0) - sprite.GetLength(0); // evita sair das bordas
-                    canva[i + y, j + x] = sprite[i, j];
+                    full_canva[i + y, j + x] = sprite[i, j];
                 }
             }
+            return full_canva;
         }
 
         // animation
-        private int mario_animation_frame = 0;
+        
+        enum Animation
+        {
+            walking_start = 3,
+            walking_end = 2,
+        }
+        
         public char[,] WalkingAnimation()  // cicla os frames para a animação de andar/correr do mario
         {
-            if (mario_animation_frame > 1) mario_animation_frame--;
-            else mario_animation_frame = 3;
-            return InvokePlayerSprite(mario_animation_frame);
+            if (mario_animation_frame >= (int)Animation.walking_end) mario_animation_frame--;
+            else mario_animation_frame = (int)Animation.walking_start;
+            return sprite_index[mario_animation_frame];
         }
 
 

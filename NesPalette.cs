@@ -78,31 +78,31 @@ namespace ConsoleBros
                 '2'
 
             };
-
+            
             ASCIIColors = new char[]
             {
-                '▒', // 0 - Cinza
-                '`', // 1 - Azul
-                '.', // 2 - AzulEscuro
+                '.', // 0 - Cinza
+                '›', // 1 - Azul
+                '‹', // 2 - AzulEscuro
                 '@', // 3 - Roxo
                 '0', // 4 - RoxoEscuro
-                '▄', // 5 - VermelhoEscuro
-                '▀', // 6 - VermelhoAlaranjado
+                'Z', // 5 - VermelhoEscuro
+                '.', // 6 - VermelhoAlaranjado
                 'M', // 7 - LaranjaEscuro
-                '#', // 8 - Marrom
+                '^', // 8 - Marrom
                 'O', // 9 - VerdeEscuro
                 '.', // 10 - VerdeAzuladoEscuro
                 '¦', // 11 - VerdeAzuladoMaisEscuro
-                '▓', // 12 - AzulPetróleo
+                'D', // 12 - AzulPetróleo
                 '.', // 13 - Preto
-                '░', // 14 - CinzaClaro
+                'H', // 14 - CinzaClaro
                 ' ', // 15 - AzulClaro
                 '-', // 16 - AzulMédio
-                '|', // 17 - RoxoClaro
+                ' ', // 17 - RoxoClaro
                 '/', // 18 - Rosa
                 '$', // 19 - VermelhoClaro
                 '¨', // 20 - LaranjaClaro
-                '^', // 21 - LaranjaAmarelado
+                '#', // 21 - LaranjaAmarelado
                 '%', // 22 - AmareloEscuro
                 'V', // 23 - VerdeClaro
                 'M', // 24 - VerdeMédio
