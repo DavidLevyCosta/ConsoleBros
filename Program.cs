@@ -5,13 +5,12 @@
         public const int SCREEN_WIDTH = 156 * 2;
         public const int SCREEN_HEIGHT = 180;
 
-        static Engine engine = new Engine(40, SCREEN_HEIGHT, SCREEN_WIDTH);
+        static Engine engine = new Engine(60, SCREEN_HEIGHT, SCREEN_WIDTH);
         static void Main(string[] args)
         {
             Start();
             engine.Start();
-            Engine.KeepItRunning();
-
+            
         }
 
         internal static void Start()

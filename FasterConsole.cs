@@ -2,6 +2,7 @@
 using System;
 using System.Text;
 
+
 class FasterConsole
 {
     public static void Write(StringBuilder sb)

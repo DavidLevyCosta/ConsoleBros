@@ -9,9 +9,9 @@ namespace ConsoleBros
         internal Player player;
         internal Background background;
         internal Tiles tiles;
-        public CanvaManager(int width, int height)
+        public CanvaManager(Player player, int width, int height)
         {
-            player = new Player();
+            this.player = player;
             background = new Background();
             tiles = new Tiles();
             canva = new char[width, height];

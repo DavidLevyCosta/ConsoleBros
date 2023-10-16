@@ -2,9 +2,14 @@
 {
     public class Player
     {
-        public short layer = 1;
-        public int x = 0;
-        public int y = 0;
+        public int X { get; set; }
+        public int Y { get; set; }
+        public double h_acceleration { get; set; }
+
+        public Player(int X, int Y) {
+            this.X = X;
+            this.Y = Y;
+        }
 
         public static List<char[,]> sprite_index = new List<char[,]>();
         private int mario_animation_frame = 0;
@@ -51,14 +56,14 @@
         {
             char[,] full_canva = new char[Program.SCREEN_HEIGHT, Program.SCREEN_WIDTH];
             CanvaManager.StartCanva(full_canva);
-            if (x + sprite.GetLength(1) > full_canva.GetLength(1)) x = full_canva.GetLength(1) - sprite.GetLength(1); // evita sair das bordas
-            if (y + sprite.GetLength(0) > full_canva.GetLength(0)) y = full_canva.GetLength(0) - sprite.GetLength(0); // evita sair das bordas
+            if (X + sprite.GetLength(1) > full_canva.GetLength(1)) X = full_canva.GetLength(1) - sprite.GetLength(1); // evita sair das bordas
+            if (Y + sprite.GetLength(0) > full_canva.GetLength(0)) Y = full_canva.GetLength(0) - sprite.GetLength(0); // evita sair das bordas
 
             for (int i = 0; i < sprite.GetLength(0); i++)
             {
                 for (int j = 0; j < sprite.GetLength(1); j++)
                 {
-                    full_canva[i + y, j + x] = sprite[i, j];
+                    full_canva[i + Y, j + X] = sprite[i, j];
                 }
             }
             return full_canva;

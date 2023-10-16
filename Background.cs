@@ -4,12 +4,13 @@
     {
         public int x = 2000;
         public int y;
-        char[,] background = SpriteHandling.ReadSprite("background.txt");
+        char[,] background;
         Elevation current_elevation;
 
         public Background ()
         {
             current_elevation = Elevation.Surface;
+            background = SpriteHandling.ReadSprite("background.txt");
         }
 
         enum Elevation
