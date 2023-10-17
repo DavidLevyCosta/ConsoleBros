@@ -5,8 +5,11 @@
         public int X { get; set; }
         public int Y { get; set; }
         public double h_acceleration { get; set; }
+        char[,] full_canva;
 
         public Player(int X, int Y) {
+            full_canva = new char[Program.SCREEN_HEIGHT, Program.SCREEN_WIDTH];
+            CanvaManager.StartCanva(full_canva);
             this.X = X;
             this.Y = Y;
         }
@@ -17,7 +20,7 @@
 
         public static void SliceFrames() // divide o spritesheet do mario em varios sprites
         {
-            char[,] mario_spritesheet = SpriteHandling.ReadSprite("mario_sprite.txt");
+            char[,] mario_spritesheet = SpriteHandling.ReadSprite("../../../Sprites/assets/mario_sprite.txt");
             const int SPRITES_IN_X = 21;
             const int SPRITES_IN_Y = 2;
             int sprite_frame_width = 16;
@@ -54,8 +57,7 @@
 
         public char[,] Draw(char[,] sprite) // joga um sprite pro canva
         {
-            char[,] full_canva = new char[Program.SCREEN_HEIGHT, Program.SCREEN_WIDTH];
-            CanvaManager.StartCanva(full_canva);
+
             if (X + sprite.GetLength(1) > full_canva.GetLength(1)) X = full_canva.GetLength(1) - sprite.GetLength(1); // evita sair das bordas
             if (Y + sprite.GetLength(0) > full_canva.GetLength(0)) Y = full_canva.GetLength(0) - sprite.GetLength(0); // evita sair das bordas
 

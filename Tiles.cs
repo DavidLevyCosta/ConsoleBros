@@ -10,7 +10,7 @@
         public Tiles()
         {
             current_elevation = Elevation.Surface;
-            tiles = SpriteHandling.ReadSprite("tiles.txt");
+            tiles = SpriteHandling.ReadSprite("../../../Sprites/assets/tiles.txt");
         }
 
         enum Elevation

@@ -25,7 +25,7 @@ namespace ConsoleBros
 
                         if (bitmap.GetPixel(j, i).A == 0)
                         {
-                            sprite[i, j] = NesPalette.ColorTag[0];
+                            sprite[i, j] = NesPalette.ASCIIColors[0];
                         }
                         else
                         {
@@ -33,7 +33,7 @@ namespace ConsoleBros
                             {
                                 if (bitmap.GetPixel(j, i) == NesPalette.RGBColors[k])
                                 {
-                                    sprite[i, j] = NesPalette.ColorTag[k];
+                                    sprite[i, j] = NesPalette.ASCIIColors[k];
                                     break;
                                 }
                             }

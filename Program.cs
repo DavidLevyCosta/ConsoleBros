@@ -1,4 +1,6 @@
-﻿namespace ConsoleBros
+﻿using System.Diagnostics;
+
+namespace ConsoleBros
 {
     internal class Program
     {
@@ -10,6 +12,7 @@
         {
             Start();
             engine.Start();
+            while (true) Thread.Sleep(99999);
             
         }
 

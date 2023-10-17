@@ -5,6 +5,7 @@ using System.Text;
 
 class FasterConsole
 {
+    static Encoding encoding = Encoding.ASCII; // Use the unicode table
     public static void Write(StringBuilder sb)
     {
         IntPtr hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -13,18 +14,19 @@ class FasterConsole
         SMALL_RECT writeRegion = new SMALL_RECT(0, 0, (short)(Console.WindowWidth - 1), (short)(sb.Length / Console.WindowWidth));
         CHAR_INFO[] consoleBuffer = new CHAR_INFO[bufferSize.X * bufferSize.Y];
 
+        // Convert the entire StringBuilder to a byte array
+        byte[] bytes = encoding.GetBytes(sb.ToString());
+
         // Fill the console buffer with data
         int index = 0;
-        Encoding encoding = Encoding.Unicode; // Use the extended ASCII table
 
         for (int y = 0; y < bufferSize.Y; y++)
         {
             for (int x = 0; x < bufferSize.X; x++)
             {
-                if (index < sb.Length)
+                if (index < bytes.Length)
                 {
-                    byte[] bytes = encoding.GetBytes(new char[] { sb[index] });
-                    consoleBuffer[y * bufferSize.X + x].AsciiChar = bytes[0];
+                    consoleBuffer[y * bufferSize.X + x].AsciiChar = bytes[index];
                     consoleBuffer[y * bufferSize.X + x].Attributes = 7;
                     index++;
                 }
@@ -34,7 +36,6 @@ class FasterConsole
         // Set the console buffer size and write the console buffer to the screen
         SetConsoleScreenBufferSize(hConsole, bufferSize);
         WriteConsoleOutput(hConsole, consoleBuffer, bufferSize, bufferCoord, ref writeRegion);
-
     }
 
     private const int STD_OUTPUT_HANDLE = -11;

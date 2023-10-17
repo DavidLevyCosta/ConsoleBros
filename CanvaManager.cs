@@ -6,15 +6,36 @@ namespace ConsoleBros
     internal class CanvaManager
     {
         public char[,] canva;
+        public char[,] frontBuffer;
+        public char[,] middleBuffer;
+        public char[,] backBuffer;
         internal Player player;
         internal Background background;
         internal Tiles tiles;
+        internal char alfa;
+        char[,]? mario;
+        char[,]? layer0;
+        char[,]? layer1;
+        char[,]? layer2;
+
         public CanvaManager(Player player, int width, int height)
         {
+
             this.player = player;
+            alfa = NesPalette.ASCIIColors[0];
             background = new Background();
             tiles = new Tiles();
-            canva = new char[width, height];
+            frontBuffer = new char[width, height];
+            middleBuffer = new char[width, height];
+            backBuffer = new char[width, height];
+
+
+            // inicia os buffers
+            FullCanvaDraw();
+            SwapBuffers();
+            FullCanvaDraw();
+            SwapBuffers();
+            FullCanvaDraw();
         }
 
         public static void StartCanva(char[,] canva) // desnulifica o canva
@@ -23,56 +44,53 @@ namespace ConsoleBros
             {
                 for (int j = 0; j < canva.GetLength(1); j++)
                 {
-                    canva[i, j] = '.';
+                    canva[i, j] = 'A';
                 }
             }
         }
 
         public void FullCanvaDraw()
         {
-            char[,] mario = player.WalkingAnimation();
-            char[,] layer0 = background.Draw();
-            char[,] layer1 = player.Draw(mario);
-            char[,] layer2 = tiles.Draw();
+            mario = player.WalkingAnimation();
+            layer0 = background.Draw();
+            layer1 = player.Draw(mario);
+            layer2 = tiles.Draw();
 
-            char[,] complete_canva = new char[Program.SCREEN_HEIGHT, Program.SCREEN_WIDTH];
-            char alfa = NesPalette.ColorTag[0];
-
-            for (int i = 0; i < complete_canva.GetLength(0); i++)
+            for (int i = 0; i < backBuffer.GetLength(0); i++)
             {
-                for (int j = 0; j < complete_canva.GetLength(1); j++)
+                for (int j = 0; j < backBuffer.GetLength(1); j++)
                 {
-                    if (layer1[i, j] == alfa && layer2[i, j] == alfa) complete_canva[i, j] = layer0[i, j];
-                    if (layer1[i, j] != alfa && layer2[i, j] == alfa) complete_canva[i, j] = layer1[i, j];
-                    if (layer2[i, j] != alfa) complete_canva[i, j] = layer2[i, j];
+                    backBuffer[i, j] = layer2[i, j] != alfa ? layer2[i, j] : (layer1[i, j] != alfa ? layer1[i, j] : layer0[i, j]);
                 }
             }
-            canva = complete_canva;
         }
 
         public StringBuilder CreateCanvaDraw() // concatena todo o canva
         {
-            FullCanvaDraw();
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < canva.GetLength(0); i++)
+            FullCanvaDraw();
+            SwapBuffers();
+
+            for (int i = 0; i < frontBuffer.GetLength(0); i++)
             {
-                for (int j = 0; j < canva.GetLength(1); j++)
+                for (int j = 0; j < frontBuffer.GetLength(1); j++)
                 {
-                    for (int k = 0; k < NesPalette.ColorTag.Length; k++)
-                    {
-                        if (canva[i, j] == NesPalette.ColorTag[k])
-                        {
-                            sb.Append(NesPalette.ASCIIColors[k]);
-                            sb.Append(NesPalette.ASCIIColors[k]);
-                        }
-                    }
+                    sb.Append(frontBuffer[i, j]);
+                    sb.Append(frontBuffer[i, j]);
                 }
                 sb.Append("\n");
             }
             return sb;
+            
         }
 
-
+        internal void SwapBuffers()
+        {
+            var temp = frontBuffer;
+            frontBuffer = middleBuffer;
+            middleBuffer = backBuffer;
+            backBuffer = temp;
+        }
 
     }
 }

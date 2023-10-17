@@ -1,15 +1,14 @@
 ﻿using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace ConsoleBros
 {
     public static class NesPalette // basicamente é uma coletânea contendo as cores e caracters
     {
         public static Color[] RGBColors { get; set; }
-        public static string[] ANSIColors { get; set; }
-        public static string[] ANSIBackground { get; set; }
         public static char[] ASCIIColors { get; set; }
         public static char[] ColorTag { get; set; }
-
+        public static Dictionary<char, char> ColorMap { get; set; }
 
         static NesPalette()
         {
@@ -81,7 +80,7 @@ namespace ConsoleBros
             
             ASCIIColors = new char[]
             {
-                '.', // 0 - Cinza
+                'A', // 0 - Cinza
                 '›', // 1 - Azul
                 '‹', // 2 - AzulEscuro
                 '@', // 3 - Roxo
@@ -108,8 +107,15 @@ namespace ConsoleBros
                 'M', // 24 - VerdeMédio
                 ' ', // 25 - VerdeAzuladoClaro
                 ',', // 26 - AzulPetróleoClaro
-                '*' // 27 - Branco
+                '*', // 27 - Branco
+                '.' // 28 - Cinza
             };
+
+            ColorMap = new Dictionary<char, char>();
+            for (int i = 0; i < ColorTag.Length; i++)
+            {
+                ColorMap[ColorTag[i]] = ASCIIColors[i];
+            }
 
         }
 

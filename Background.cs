@@ -10,7 +10,7 @@
         public Background ()
         {
             current_elevation = Elevation.Surface;
-            background = SpriteHandling.ReadSprite("background.txt");
+            background = SpriteHandling.ReadSprite("../../../Sprites/assets/background.txt");
         }
 
         enum Elevation

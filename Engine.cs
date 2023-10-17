@@ -22,7 +22,7 @@ namespace ConsoleBros
 
         public void Start() // inicia o canva (desnulifica os index) e a atualizão dos frames
         {
-            CanvaManager.StartCanva(canva_manager.canva); // LEMBRAR DE VIR TROCAR ISSO DEPOIS <-
+            CanvaManager.StartCanva(canva_manager.backBuffer); // LEMBRAR DE VIR TROCAR ISSO DEPOIS <-
             frame_timer.Enabled = true; // inicia o frame timer
             frame_timer.AutoReset = true; // faz ele resetar quando acabar o timer
         }
@@ -54,7 +54,7 @@ namespace ConsoleBros
 
         internal void Move()
         {
-
+            input.ReadKeys();
             if (input.IsIdle)
             {
                 player.h_acceleration = Math.Max(0, player.h_acceleration - subpixel);
