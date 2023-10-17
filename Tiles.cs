@@ -2,7 +2,7 @@
 {
     public class Tiles
     {
-        public int x = 2000;
+        public int x = 0;
         public int y;
         char[,] tiles;
         Elevation current_elevation;

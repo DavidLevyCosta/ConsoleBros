@@ -11,12 +11,10 @@ namespace ConsoleBros
         public char[,] backBuffer;
         internal Player player;
         internal Background background;
-        internal Tiles tiles;
         internal char alfa;
         char[,]? mario;
         char[,]? layer0;
         char[,]? layer1;
-        char[,]? layer2;
 
         public CanvaManager(Player player, int width, int height)
         {
@@ -24,7 +22,6 @@ namespace ConsoleBros
             this.player = player;
             alfa = NesPalette.ASCIIColors[0];
             background = new Background();
-            tiles = new Tiles();
             frontBuffer = new char[width, height];
             middleBuffer = new char[width, height];
             backBuffer = new char[width, height];
@@ -36,6 +33,7 @@ namespace ConsoleBros
             FullCanvaDraw();
             SwapBuffers();
             FullCanvaDraw();
+
         }
 
         public static void StartCanva(char[,] canva) // desnulifica o canva
@@ -44,23 +42,22 @@ namespace ConsoleBros
             {
                 for (int j = 0; j < canva.GetLength(1); j++)
                 {
-                    canva[i, j] = 'A';
+                    canva[i, j] = '.';
                 }
             }
         }
 
         public void FullCanvaDraw()
         {
-            mario = player.WalkingAnimation();
+            mario = player.Animation();
             layer0 = background.Draw();
             layer1 = player.Draw(mario);
-            layer2 = tiles.Draw();
 
             for (int i = 0; i < backBuffer.GetLength(0); i++)
             {
                 for (int j = 0; j < backBuffer.GetLength(1); j++)
                 {
-                    backBuffer[i, j] = layer2[i, j] != alfa ? layer2[i, j] : (layer1[i, j] != alfa ? layer1[i, j] : layer0[i, j]);
+                    backBuffer[i, j] = layer1[i, j] != alfa ? layer1[i, j] : layer0[i, j];
                 }
             }
         }
@@ -75,8 +72,8 @@ namespace ConsoleBros
             {
                 for (int j = 0; j < frontBuffer.GetLength(1); j++)
                 {
-                    sb.Append(frontBuffer[i, j]);
-                    sb.Append(frontBuffer[i, j]);
+                    sb.Append(NesPalette.ColorMap[frontBuffer[i, j]]);
+                    sb.Append(NesPalette.ColorMap[frontBuffer[i, j]]);
                 }
                 sb.Append("\n");
             }

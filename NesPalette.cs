@@ -80,7 +80,7 @@ namespace ConsoleBros
             
             ASCIIColors = new char[]
             {
-                'A', // 0 - Cinza
+                '.', // 0 - Cinza
                 '›', // 1 - Azul
                 '‹', // 2 - AzulEscuro
                 '@', // 3 - Roxo
@@ -108,7 +108,7 @@ namespace ConsoleBros
                 ' ', // 25 - VerdeAzuladoClaro
                 ',', // 26 - AzulPetróleoClaro
                 '*', // 27 - Branco
-                '.' // 28 - Cinza
+                ' ' // 28 - Alfa
             };
 
             ColorMap = new Dictionary<char, char>();

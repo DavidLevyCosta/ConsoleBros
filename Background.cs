@@ -2,7 +2,7 @@
 {
     public class Background
     {
-        public int x = 2000;
+        public int x = 0;
         public int y;
         char[,] background;
         Elevation current_elevation;
@@ -10,7 +10,7 @@
         public Background ()
         {
             current_elevation = Elevation.Surface;
-            background = SpriteHandling.ReadSprite("../../../Sprites/assets/background.txt");
+            background = SpriteHandling.ReadSprite("../../../Sprites/assets/full_bg.txt");
         }
 
         enum Elevation

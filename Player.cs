@@ -4,29 +4,51 @@
     {
         public int X { get; set; }
         public int Y { get; set; }
-        public double h_acceleration { get; set; }
-        char[,] full_canva;
+        public bool orientation_right { get; set; }
+        public short max_speed { get; set; }
+
+        public short friction;
+        private int mario_animation_frame;
+
+        public const double subpixel = 0.0625;
+        public double acceleration = 0;
+        public double render_position = 0;
+        private int animationCounter;
+
+        private const int SPRITES_IN_X = 21;
+        private const int SPRITES_IN_Y = 2;
+        private static int sprite_frame_width = 16;
+        private static int sprite_frame_height = 32;
+        private static int x_start = 0;
+        private static int y_start = 0;
+        private static char[,] mario_spritesheet = SpriteHandling.ReadSprite("../../../Sprites/assets/mario_sprite.txt");
+
+        public AnimationState animation_state = new AnimationState();
+
+        public enum AnimationState
+        {
+            Idle,
+            WalkingRight,
+            WalkingLeft,
+            RunningRight,
+            RunningLeft,
+            Drifting
+        }
 
         public Player(int X, int Y) {
-            full_canva = new char[Program.SCREEN_HEIGHT, Program.SCREEN_WIDTH];
-            CanvaManager.StartCanva(full_canva);
             this.X = X;
             this.Y = Y;
+            animationCounter = 0;
+            friction = 1;
+            orientation_right = true;
+            mario_animation_frame = 0;
         }
 
         public static List<char[,]> sprite_index = new List<char[,]>();
-        private int mario_animation_frame = 0;
-
 
         public static void SliceFrames() // divide o spritesheet do mario em varios sprites
         {
-            char[,] mario_spritesheet = SpriteHandling.ReadSprite("../../../Sprites/assets/mario_sprite.txt");
-            const int SPRITES_IN_X = 21;
-            const int SPRITES_IN_Y = 2;
-            int sprite_frame_width = 16;
-            int sprite_frame_height = 32;
-            int x_start = 0;
-            int y_start = 0;
+
             char[,] frame_data;
 
             for (int frame = 0; frame < SPRITES_IN_X * SPRITES_IN_Y; frame++) // é o loop que define o index do sprite dividido na coletanea
@@ -37,6 +59,7 @@
                 {
                     for (int j = 0; j < frame_data.GetLength(1); j++)
                     {
+
                         frame_data[i, j] = mario_spritesheet[i + y_start, j + x_start];
 
                     }
@@ -57,33 +80,74 @@
 
         public char[,] Draw(char[,] sprite) // joga um sprite pro canva
         {
-
+            char[,] full_canva = new char[Program.SCREEN_HEIGHT, Program.SCREEN_WIDTH];
+            CanvaManager.StartCanva(full_canva);
             if (X + sprite.GetLength(1) > full_canva.GetLength(1)) X = full_canva.GetLength(1) - sprite.GetLength(1); // evita sair das bordas
+            if (X < 0) X = 0;
             if (Y + sprite.GetLength(0) > full_canva.GetLength(0)) Y = full_canva.GetLength(0) - sprite.GetLength(0); // evita sair das bordas
 
             for (int i = 0; i < sprite.GetLength(0); i++)
             {
                 for (int j = 0; j < sprite.GetLength(1); j++)
                 {
-                    full_canva[i + Y, j + X] = sprite[i, j];
+                    if (orientation_right)
+                    {
+                        full_canva[i + Y, j + X] = sprite[i, j];
+                    }
+                    else
+                    {
+                        full_canva[i + Y, X + sprite.GetLength(1) - 1 - j] = sprite[i, j];
+                    }
                 }
             }
             return full_canva;
         }
 
         // animation
-        
-        enum Animation
+
+        public char[,] Animation()
         {
-            walking_start = 3,
-            walking_end = 2,
+
+            switch (animation_state)
+            {
+                case AnimationState.WalkingRight or AnimationState.WalkingLeft:
+                    return WalkingAnimation();
+                case AnimationState.Drifting:
+                    return DriftAnimation();
+                default:
+                    return IdleAnimation();
+            }
         }
-        
+
         public char[,] WalkingAnimation()  // cicla os frames para a animação de andar/correr do mario
         {
-            if (mario_animation_frame >= (int)Animation.walking_end) mario_animation_frame--;
-            else mario_animation_frame = (int)Animation.walking_start;
+            // Ajusta a velocidade da animação com base na aceleração
+            int animationSpeed = (int)(5 - Math.Abs(acceleration));
+
+            // Incrementa o contador de animação
+            animationCounter++;
+
+            // Muda o frame da animação quando o contador atinge o limite
+            if (animationCounter >= animationSpeed)
+            {
+                if (mario_animation_frame >= 2) mario_animation_frame--;
+                else mario_animation_frame = 3;
+
+                // Reseta o contador de animação
+                animationCounter = 0;
+            }
+
             return sprite_index[mario_animation_frame];
+        }
+
+        public char[,] DriftAnimation()
+        {
+            return sprite_index[4];
+        }
+
+        public char[,] IdleAnimation()
+        {
+            return sprite_index[0];
         }
 
 
