@@ -7,6 +7,8 @@ namespace ConsoleBros
 {
     internal class Engine
     {
+        public static int Level_X;
+        public static int Level_Y;
         private int fps;
         Thread DrawThread;
         Thread UpdateThread;
@@ -16,6 +18,8 @@ namespace ConsoleBros
         private StringBuilder? screen; // tela que receberá a informação do canva
         public Engine(int fps, int canva_width, int canva_height) // cria o motor com informação de tamanho do canva e a quantidade de frames por segundo
         {
+            Level_X = 0;
+            Level_Y = 0;
             this.fps = fps;
             player = new Player(0, 0);
             input = new Input();
@@ -72,19 +76,19 @@ namespace ConsoleBros
             }
 
             // Handle right key press
-            if (input.IsRightKeyPressed)
+            if (input.IsRightKeyPressed && !input.IsLeftKeyPressed)
             {
                 HandleRightKeyPress();
             }
 
             // Handle left key press
-            if (input.IsLeftKeyPressed)
+            if (input.IsLeftKeyPressed && !input.IsRightKeyPressed)
             {
                 HandleLeftKeyPress();
             }
 
             // Update player position
-            player.render_position += player.acceleration;
+            if (!OnColision()) player.render_position += player.acceleration;
             player.X = (int)Math.Floor(player.render_position);
         }
 
@@ -102,6 +106,7 @@ namespace ConsoleBros
 
         private void HandleRightKeyPress()
         {
+
             player.orientation_right = true;
 
             if (player.acceleration < 0)
@@ -115,7 +120,6 @@ namespace ConsoleBros
                 player.animation_state = Player.AnimationState.WalkingRight;
                 player.friction = 1;
             }
-
             player.acceleration = Math.Min(2, player.acceleration + (Player.subpixel * player.friction));
         }
 
@@ -136,6 +140,13 @@ namespace ConsoleBros
             }
 
             player.acceleration = Math.Max(-2, player.acceleration - (Player.subpixel * player.friction));
+        }
+
+        private bool OnColision()
+        {
+            /*
+            if (player.X < 0 && input.IsLeftKeyPressed) return true;
+            else return false; */
         }
 
     }

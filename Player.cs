@@ -1,4 +1,6 @@
-﻿namespace ConsoleBros
+﻿using System.Runtime.CompilerServices;
+
+namespace ConsoleBros
 {
     public class Player
     {
@@ -15,13 +17,7 @@
         public double render_position = 0;
         private int animationCounter;
 
-        private const int SPRITES_IN_X = 21;
-        private const int SPRITES_IN_Y = 2;
-        private static int sprite_frame_width = 16;
-        private static int sprite_frame_height = 32;
-        private static int x_start = 0;
-        private static int y_start = 0;
-        private static char[,] mario_spritesheet = SpriteHandling.ReadSprite("../../../Sprites/assets/mario_sprite.txt");
+        public static List<char[,]> sprite;
 
         public AnimationState animation_state = new AnimationState();
 
@@ -36,6 +32,7 @@
         }
 
         public Player(int X, int Y) {
+            sprite = SpriteHandling.SliceSprite(21, 2, 16, 32, "../../../Sprites/assets/mario_sprite.txt", 16);
             this.X = X;
             this.Y = Y;
             animationCounter = 0;
@@ -44,63 +41,34 @@
             mario_animation_frame = 0;
         }
 
-        public static List<char[,]> sprite_index = new List<char[,]>();
 
-        public static void SliceFrames() // divide o spritesheet do mario em varios sprites
+        // mover o método para SpriteHandling depois
+
+
+
+        public char[,] Draw(char[,] canva, char[,] sprite) // joga um sprite pro canva
         {
-
-            char[,] frame_data;
-
-            for (int frame = 0; frame < SPRITES_IN_X * SPRITES_IN_Y; frame++) // é o loop que define o index do sprite dividido na coletanea
-            {
-                frame_data = new char[sprite_frame_height, sprite_frame_width]; // é o sprite que vai ser adicionado a coletanea, é definido aqui para ter altura dinamica (para abrigar sprites de tamanho diferente)
-
-                for (int i = 0; i < frame_data.GetLength(0); i++)       // esse loop e o de baixo é o iter do sprite dividido
-                {
-                    for (int j = 0; j < frame_data.GetLength(1); j++)
-                    {
-
-                        frame_data[i, j] = mario_spritesheet[i + y_start, j + x_start];
-
-                    }
-                }
-                sprite_index.Add(frame_data); // adiciona o sprite completo para a coletanea de sprites divididos
-
-                if (frame == 20) // quando chegar ao final da primeira linha, diminui a altura do sprite para pegar o mini mario
-                {
-                    y_start += sprite_frame_height; // Mini Mario
-                    sprite_frame_height = 16;
-                    x_start = 0;
-                }
-                else x_start += sprite_frame_width; // no final do de cada divisão, passa para o próximo sprite
-
-            }
-        }
-
-
-        public char[,] Draw(char[,] sprite) // joga um sprite pro canva
-        {
-            char[,] full_canva = new char[Program.SCREEN_HEIGHT, Program.SCREEN_WIDTH];
-            CanvaManager.StartCanva(full_canva);
-            if (X + sprite.GetLength(1) > full_canva.GetLength(1)) X = full_canva.GetLength(1) - sprite.GetLength(1); // evita sair das bordas
-            if (X < 0) X = 0;
-            if (Y + sprite.GetLength(0) > full_canva.GetLength(0)) Y = full_canva.GetLength(0) - sprite.GetLength(0); // evita sair das bordas
 
             for (int i = 0; i < sprite.GetLength(0); i++)
             {
                 for (int j = 0; j < sprite.GetLength(1); j++)
                 {
-                    if (orientation_right)
+                    if (sprite[i, j] != '.')
                     {
-                        full_canva[i + Y, j + X] = sprite[i, j];
+                        if (orientation_right)
+                        {
+                            canva[i + Y, j + X] = sprite[i, j];
+                        }
+                        else
+                        {
+                            canva[i + Y, X + sprite.GetLength(1) - 1 - j] = sprite[i, j];
+                        }
                     }
-                    else
-                    {
-                        full_canva[i + Y, X + sprite.GetLength(1) - 1 - j] = sprite[i, j];
-                    }
+                    else continue;
+
                 }
             }
-            return full_canva;
+            return canva;
         }
 
         // animation
@@ -137,17 +105,17 @@
                 animationCounter = 0;
             }
 
-            return sprite_index[mario_animation_frame];
+            return sprite[mario_animation_frame];
         }
 
         public char[,] DriftAnimation()
         {
-            return sprite_index[4];
+            return sprite[4];
         }
 
         public char[,] IdleAnimation()
         {
-            return sprite_index[0];
+            return sprite[0];
         }
 
 

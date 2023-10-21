@@ -17,7 +17,7 @@ namespace ConsoleBros
 
         internal static void Start()
         {
-            Player.SliceFrames();
+            //SpriteHandling.WriteTilesToFile(SpriteHandling.ReadTileMap(), "../../../Sprites/assets/tile_map.txt");
             ConsoleFont.SetSize(2);
             Console.SetWindowSize(SCREEN_WIDTH * 2, SCREEN_HEIGHT);
             Console.BufferWidth = Console.WindowWidth;

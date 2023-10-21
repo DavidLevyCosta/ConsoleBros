@@ -1,16 +1,27 @@
-﻿namespace ConsoleBros
+﻿using System.Drawing;
+using static ConsoleBros.SpriteHandling;
+
+namespace ConsoleBros
 {
     public class Tiles
     {
-        public int x = 0;
-        public int y;
-        char[,] tiles;
+        public int X { get; set; }
+        public int y { get; set; }
+        Background background;
+        ushort level_height;
+        char[,] screen_canva;
+        List<Tile> tile_data;
+        List<char[,]> tile_sprite;
         Elevation current_elevation;
 
         public Tiles()
         {
+            background = new Background();
+            tile_sprite = SliceSprite(11, 1, 16, 16, "../../../Sprites/assets/tiles_sprite.txt");
+            tile_data = ReadTilesFromFile("../../../Sprites/assets/tile_map.txt");
+            level_height = 480;
             current_elevation = Elevation.Surface;
-            tiles = SpriteHandling.ReadSprite("../../../Sprites/assets/tiles.txt");
+            screen_canva = new char[Program.SCREEN_HEIGHT, Program.SCREEN_WIDTH];
         }
 
         enum Elevation
@@ -19,30 +30,69 @@
             Underground = 1
         }
 
-        public char[,] Draw()
-        {     
-            int top_start;
-            int left_start;
-            char[,] full_canva = new char[Program.SCREEN_HEIGHT, Program.SCREEN_WIDTH];
-
-            if (current_elevation == Elevation.Surface)
+        public List<Tile> SetTiles(List<Tile> tiles)
+        {
+            Rectangle viewport = new Rectangle
             {
-                top_start = (tiles.GetLength(0) / 2) - Program.SCREEN_HEIGHT;
-                if (x >= 0) left_start = x;
-                else if (x > tiles.GetLength(0) - Program.SCREEN_WIDTH) left_start = tiles.GetLength(0) - Program.SCREEN_WIDTH;
-                else left_start = 0;
+                X = background.X,
+                Y = background.Y,
+                Width = Program.SCREEN_WIDTH + 32, //pra não ficar cortado desenha dois tile para frente
+                Height = Program.SCREEN_HEIGHT + 16  //estavam afundados 16px pra baixo. está resolvido, mas de uma forma bem mé...
+            };
+            List<Tile> tiles_on_screen = new List<Tile>();
+            
 
-                for (int i = 0; i < full_canva.GetLength(0); i++)
+            for (int T = 0; T < tiles.Count; T++)
+            {
+                Tile tile = tiles[T];
+                if (IsTileOnScreen(tile.rectangle, viewport))
                 {
-                    for (int j = 0; j < full_canva.GetLength(1); j++)
-                    {
-                        full_canva[i, j] = tiles[i + top_start, j + left_start];
-                    }
+                    tiles_on_screen.Add(tile);
                 }
-
             }
-            return full_canva;
+
+            return tiles_on_screen;
         }
 
+        public char[,] Draw(char[,] canva)
+        {
+            List<Tile> tiles_on_screen = SetTiles(tile_data);
+            char[,] sprite;
+            ushort x_in_screen;
+            ushort y_in_screen;
+            for (int T = 0; T < tiles_on_screen.Count; T++)
+            {
+                sprite = tile_sprite[tiles_on_screen[T].type_id];
+                x_in_screen = (ushort)(tiles_on_screen[T].rectangle.X - background.X);
+                y_in_screen = (ushort)(tiles_on_screen[T].rectangle.Y - background.Y - 16); //estavam afundados 16px pra baixo. está resolvido, mas de uma forma bem mé...
+
+
+
+                for (int i = 0; i < sprite.GetLength(0); i++)
+                {
+                    for (int j = 0; j < sprite.GetLength(1); j++)
+                    {
+                        canva[y_in_screen + i, x_in_screen + j] = sprite[i, j];
+                    }
+                }
+            }
+            return canva;
+        }
+
+
+        internal bool IsTileOnScreen(System.Drawing.Rectangle tile, Rectangle viewport)
+        {
+            // Verifica se o tile está à direita da borda esquerda da viewport
+            bool rightOfLeftBound = tile.Left >= viewport.Left;
+            // Verifica se o tile está à esquerda da borda direita da viewport
+            bool leftOfRightBound = tile.Right <= viewport.Right;
+            // Verifica se o tile está abaixo da borda superior da viewport
+            bool belowTopBound = tile.Top >= viewport.Top;
+            // Verifica se o tile está acima da borda inferior da viewport
+            bool aboveBottomBound = tile.Bottom <= viewport.Bottom;
+
+            // Se todas as condições forem verdadeiras, o tile está na tela
+            return rightOfLeftBound && leftOfRightBound && belowTopBound && aboveBottomBound;
+        }
     }
 }

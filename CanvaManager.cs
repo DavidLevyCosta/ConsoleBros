@@ -11,9 +11,10 @@ namespace ConsoleBros
         public char[,] backBuffer;
         internal Player player;
         internal Background background;
+        internal Tiles tiles;
         internal char alfa;
         char[,]? mario;
-        char[,]? layer0;
+        char[,]? screen_drawing;
         char[,]? layer1;
 
         public CanvaManager(Player player, int width, int height)
@@ -22,6 +23,7 @@ namespace ConsoleBros
             this.player = player;
             alfa = NesPalette.ASCIIColors[0];
             background = new Background();
+            tiles = new Tiles();
             frontBuffer = new char[width, height];
             middleBuffer = new char[width, height];
             backBuffer = new char[width, height];
@@ -50,14 +52,14 @@ namespace ConsoleBros
         public void FullCanvaDraw()
         {
             mario = player.Animation();
-            layer0 = background.Draw();
-            layer1 = player.Draw(mario);
+            screen_drawing = tiles.Draw(player.Draw(background.Draw(), mario));
 
             for (int i = 0; i < backBuffer.GetLength(0); i++)
             {
                 for (int j = 0; j < backBuffer.GetLength(1); j++)
                 {
-                    backBuffer[i, j] = layer1[i, j] != alfa ? layer1[i, j] : layer0[i, j];
+                    //backBuffer[i, j] = layer1[i, j] != alfa ? layer1[i, j] : layer0[i, j];
+                    backBuffer[i, j] = screen_drawing[i, j];
                 }
             }
         }

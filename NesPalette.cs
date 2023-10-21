@@ -6,6 +6,7 @@ namespace ConsoleBros
     public static class NesPalette // basicamente é uma coletânea contendo as cores e caracters
     {
         public static Color[] RGBColors { get; set; }
+        public static Color[] TileMap { get; set; }
         public static char[] ASCIIColors { get; set; }
         public static char[] ColorTag { get; set; }
         public static Dictionary<char, char> ColorMap { get; set; }
@@ -43,6 +44,20 @@ namespace ConsoleBros
                 Color.FromArgb(0, 136, 136), // 26 - AzulPetróleoClaro
                 Color.FromArgb(248, 248, 248) // 27 - Branco
             };
+
+            TileMap = new Color[]
+            {
+                Color.FromArgb(0, 255, 114), // 0 - Chão Sólido
+                Color.FromArgb(182, 253, 105), // 1 - Bloco Quebrável
+                Color.FromArgb(105, 253, 171), // 2 - Bloco Inquebrável
+                Color.FromArgb(241, 255, 9), // 3 - ?
+                Color.FromArgb(255, 0, 0), // 4 - Cano Trigger
+                Color.FromArgb(27, 111, 7), // 5 - Cano
+                Color.FromArgb(255, 0, 216), // 6 - Cabo Bandeira
+                Color.FromArgb(255, 141, 238), // 7 - Ponta Bandeira
+
+            };
+
 
             ColorTag = new char[]
             {
