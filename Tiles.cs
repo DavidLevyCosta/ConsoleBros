@@ -8,9 +8,7 @@ namespace ConsoleBros
         public int X { get; set; }
         public int y { get; set; }
         Background background;
-        ushort level_height;
-        char[,] screen_canva;
-        List<Tile> tile_data;
+        public List<Tile> tile_data;
         List<char[,]> tile_sprite;
         Elevation current_elevation;
 
@@ -19,9 +17,7 @@ namespace ConsoleBros
             background = new Background();
             tile_sprite = SliceSprite(11, 1, 16, 16, "../../../Sprites/assets/tiles_sprite.txt");
             tile_data = ReadTilesFromFile("../../../Sprites/assets/tile_map.txt");
-            level_height = 480;
             current_elevation = Elevation.Surface;
-            screen_canva = new char[Program.SCREEN_HEIGHT, Program.SCREEN_WIDTH];
         }
 
         enum Elevation
@@ -30,7 +26,7 @@ namespace ConsoleBros
             Underground = 1
         }
 
-        public List<Tile> SetTiles(List<Tile> tiles)
+        public List<Tile> GetTilesOnScreen(List<Tile> tiles)
         {
             Rectangle viewport = new Rectangle
             {
@@ -54,9 +50,10 @@ namespace ConsoleBros
             return tiles_on_screen;
         }
 
+
         public char[,] Draw(char[,] canva)
         {
-            List<Tile> tiles_on_screen = SetTiles(tile_data);
+            List<Tile> tiles_on_screen = GetTilesOnScreen(tile_data);
             char[,] sprite;
             ushort x_in_screen;
             ushort y_in_screen;

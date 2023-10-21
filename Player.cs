@@ -8,16 +8,18 @@ namespace ConsoleBros
         public int Y { get; set; }
         public bool orientation_right { get; set; }
         public short max_speed { get; set; }
-
+        public bool big_mario { get; set; }
         public short friction;
         private int mario_animation_frame;
 
         public const double subpixel = 0.0625;
-        public double acceleration = 0;
-        public double render_position = 0;
+        public double x_acceleration = 0;
+        public double y_acceleration = 0;
+        public double render_x_position = 0;
+        public double render_y_position = 0;
         private int animationCounter;
 
-        public static List<char[,]> sprite;
+        public List<char[,]> sprite;
 
         public AnimationState animation_state = new AnimationState();
 
@@ -31,10 +33,8 @@ namespace ConsoleBros
             Drifting
         }
 
-        public Player(int X, int Y) {
+        public Player() {
             sprite = SpriteHandling.SliceSprite(21, 2, 16, 32, "../../../Sprites/assets/mario_sprite.txt", 16);
-            this.X = X;
-            this.Y = Y;
             animationCounter = 0;
             friction = 1;
             orientation_right = true;
@@ -48,6 +48,8 @@ namespace ConsoleBros
 
         public char[,] Draw(char[,] canva, char[,] sprite) // joga um sprite pro canva
         {
+            if (sprite.GetLength(0) > 16) big_mario = true;
+            else big_mario = false;
 
             for (int i = 0; i < sprite.GetLength(0); i++)
             {
@@ -75,7 +77,7 @@ namespace ConsoleBros
 
         public char[,] Animation()
         {
-
+            
             switch (animation_state)
             {
                 case AnimationState.WalkingRight or AnimationState.WalkingLeft:
@@ -90,7 +92,7 @@ namespace ConsoleBros
         public char[,] WalkingAnimation()  // cicla os frames para a animação de andar/correr do mario
         {
             // Ajusta a velocidade da animação com base na aceleração
-            int animationSpeed = (int)(5 - Math.Abs(acceleration));
+            int animationSpeed = (int)(5 - Math.Abs(x_acceleration));
 
             // Incrementa o contador de animação
             animationCounter++;
