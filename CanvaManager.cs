@@ -9,13 +9,14 @@ namespace ConsoleBros
         public char[,] frontBuffer;
         public char[,] middleBuffer;
         public char[,] backBuffer;
+        public ushort crop_x = 16;
+        public ushort crop_y = 16;
         internal Player player;
         internal Background background;
         internal Tiles tiles;
         internal char alfa;
         char[,]? mario;
         char[,]? screen_drawing;
-        char[,]? layer1;
 
         public CanvaManager(Player player, int width, int height)
         {
@@ -59,7 +60,7 @@ namespace ConsoleBros
                 for (int j = 0; j < backBuffer.GetLength(1); j++)
                 {
                     //backBuffer[i, j] = layer1[i, j] != alfa ? layer1[i, j] : layer0[i, j];
-                    backBuffer[i, j] = screen_drawing[i, j];
+                    backBuffer[i, j] = screen_drawing[i + crop_y, j + crop_x];
                 }
             }
         }

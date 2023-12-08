@@ -9,7 +9,7 @@
 
         public Background ()
         {
-            X = 8; //apenas teste
+            X = 0; //apenas teste
             current_elevation = Elevation.Surface;
             background = SpriteHandling.ReadSprite("../../../Sprites/assets/background.txt");
         }
@@ -24,11 +24,11 @@
         {
             int top_start;
             int left_start;
-            char[,] full_canva = new char[Program.SCREEN_HEIGHT, Program.SCREEN_WIDTH + 32];
+            char[,] full_canva = new char[Program.SCREEN_HEIGHT + 32, Program.SCREEN_WIDTH + 32];
 
             if (current_elevation == Elevation.Surface)
             {
-                top_start = (background.GetLength(0) / 2) - Program.SCREEN_HEIGHT;
+                top_start = (background.GetLength(0) / 2) - Program.SCREEN_HEIGHT - 16;
                 if (X >= 0) left_start = X;
                 else if (X > background.GetLength(0) - Program.SCREEN_WIDTH) left_start = background.GetLength(0) - Program.SCREEN_WIDTH;
                 else left_start = 0;

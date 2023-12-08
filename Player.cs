@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Numerics;
+using ConsoleBros;
+using System.Runtime.CompilerServices;
 
 namespace ConsoleBros
 {
@@ -6,6 +8,9 @@ namespace ConsoleBros
     {
         public int X { get; set; }
         public int Y { get; set; }
+        public ushort width { get; }
+        public ushort height { get; }
+        public Vector2 vector { get; set; }
         public bool orientation_right { get; set; }
         public short max_speed { get; set; }
         public bool big_mario { get; set; }
@@ -18,6 +23,7 @@ namespace ConsoleBros
         public double render_x_position = 0;
         public double render_y_position = 0;
         private int animationCounter;
+        public State current_state;
 
         public List<char[,]> sprite;
 
@@ -32,13 +38,26 @@ namespace ConsoleBros
             RunningLeft,
             Drifting
         }
+        public enum State
+        {
+            Grounded,
+            Airborne
+        }
+
+        
 
         public Player() {
+            width = 16;
+            height = 32;
+            Y = 32;
+            X = 16;
+            render_x_position = 16;
             sprite = SpriteHandling.SliceSprite(21, 2, 16, 32, "../../../Sprites/assets/mario_sprite.txt", 16);
             animationCounter = 0;
             friction = 1;
             orientation_right = true;
             mario_animation_frame = 0;
+            current_state = State.Grounded;
         }
 
 
@@ -48,8 +67,6 @@ namespace ConsoleBros
 
         public char[,] Draw(char[,] canva, char[,] sprite) // joga um sprite pro canva
         {
-            if (sprite.GetLength(0) > 16) big_mario = true;
-            else big_mario = false;
 
             for (int i = 0; i < sprite.GetLength(0); i++)
             {
@@ -67,7 +84,6 @@ namespace ConsoleBros
                         }
                     }
                     else continue;
-
                 }
             }
             return canva;
@@ -77,16 +93,22 @@ namespace ConsoleBros
 
         public char[,] Animation()
         {
-            
-            switch (animation_state)
+            if (current_state == State.Grounded)
             {
-                case AnimationState.WalkingRight or AnimationState.WalkingLeft:
-                    return WalkingAnimation();
-                case AnimationState.Drifting:
-                    return DriftAnimation();
-                default:
-                    return IdleAnimation();
+                switch (animation_state)
+                {
+                    case AnimationState.WalkingRight or AnimationState.WalkingLeft:
+                        return WalkingAnimation();
+                    case AnimationState.Drifting:
+                        return DriftAnimation();
+                    default:
+                        return IdleAnimation();
+                }
+            } else
+            {
+                return JumpAnimation();
             }
+
         }
 
         public char[,] WalkingAnimation()  // cicla os frames para a animação de andar/correr do mario
@@ -120,6 +142,10 @@ namespace ConsoleBros
             return sprite[0];
         }
 
+        public char[,] JumpAnimation()
+        {
+            return sprite[5];
+        }
 
 
     }

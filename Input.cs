@@ -19,6 +19,16 @@ public class Input
     {
         bool isRightKeyPressed = IsKeyDown(ConsoleKey.RightArrow);
         bool isLeftKeyPressed = IsKeyDown(ConsoleKey.LeftArrow);
+        bool isJumpKeyPressed = IsKeyDown(ConsoleKey.A);
+
+        if (isJumpKeyPressed)
+        {
+            IsJumpKeyPressed = true;
+        }
+        else
+        {
+            IsJumpKeyPressed = false;
+        }
 
         if (isRightKeyPressed && !wasRightKeyPressed)
         {
